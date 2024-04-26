@@ -1,0 +1,64 @@
+<html>
+<head>
+
+<script>
+   const aMengeData = [
+		{ id: 1, name :  "X12", aMenge : 144 } ,
+		{ id: 2, name :  "X13", aMenge : 100 } ,
+		{ id: 3, name :  "X14", aMenge : 123 } ,
+		{ id: 4, name :  "X15", aMenge : 133 } ,
+		{ id: 5, name :  "X16", aMenge : 150 } ,
+	];
+</script>
+
+</head>
+<body>
+<h1>Floorbridge Schachtel Calculator</h1>
+<div id="aMengeInputDiv"> </div>
+<div id="resultDiv" style="margin-top:30px"> </div>
+</body>
+<script>
+	let html = "<table>";
+	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>Tassen</th>"
+	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen in Bestellung</th>"
+	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen pro Schachtel</th>"
+	html += "</tr>";
+	for (const aMengePos of aMengeData) {
+		html += "<tr>";
+		html += "<td style='padding-bottom:20px; text-align:center'>" + "<label for='noOfpieses" + aMengePos.id + "'>" + aMengePos.name + "</label>" + "</td>"
+		html += "<td style='padding-left:20px; padding-right:20px; padding-bottom:20px'>" 
+				+ "<input type='number' id='noOfpieses" + aMengePos.id + "' name='noOfpieses" + aMengePos.id + "' value='0' min='0' max='5000' style='width=80px;' onchange='noOfPiececChanged()'>" 
+			 + "</td>"
+		html += "<td style='padding-bottom:20px'>" + aMengePos.aMenge + "</td>"
+		html += "</tr>";
+	}
+	html += "</table>";
+	document.getElementById("aMengeInputDiv").innerHTML = html;
+
+	noOfPiececChanged();
+
+	function noOfPiececChanged() {
+		let sumSchachteln = 0;
+		let html = "<table>";
+		html += "<tr>";
+			html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>Tassen</th>"
+			html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen in Bestellung</th>"
+			html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen pro Schachtel</th>"
+			html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>#Paletten</th>"
+			html += "</tr>";
+		for (const aMengePos of aMengeData) {
+			let menge = document.getElementById("noOfpieses" + aMengePos.id).value;
+			let countPerSchachtel = aMengePos.aMenge;
+			let paletten = menge / countPerSchachtel;
+			html += "<tr>";
+			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder'>" + aMengePos.name + "</td>"
+			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px'>" + menge + "</td>"
+			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px'>" + countPerSchachtel + "</td>"
+			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder'>" + (Math.round((paletten + Number.EPSILON) * 100) / 100) + "</td>"
+			html += "</tr>";
+		}
+		html += "</table>";
+		document.getElementById("resultDiv").innerHTML = html;
+	}
+</script>
+</html>
