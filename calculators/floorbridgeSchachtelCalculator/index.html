@@ -12,10 +12,24 @@
 </script>
 
 </head>
-<body>
-<h1>Floorbridge Schachtel Calculator</h1>
-<div id="aMengeInputDiv"> </div>
-<div id="resultDiv" style="margin-top:30px"> </div>
+<body style="margin:0">
+<div style="display: flex; width:100%">
+    <div style="width:100px; background: #ffdc14; display: flex;padding: 10px">
+        <img src="img/td_header.svg" style="height:100px" alt="Transparentdesign Logo Header">
+    </div>
+
+    <div style="flex-grow: 1; background: linear-gradient(90deg, #ffdc14 0%, #0062ad 100%);display: flex; color: #fff; justify-content: center; align-items: center">
+        <h1 style="font-family: khand, Helvetica, Arial, sans-serif">Floorbridge Schachtel Calculator</h1>
+    </div>
+
+    <div style="width:100px; background: #0062ad; display: flex;padding: 10px">
+        <img src="img/FloorBridge_Logo_05.svg" style="height:100px" alt="Floorbridge Logo Header">
+    </div>
+</div>
+<div style="display: flex; justify-content: center; margin-top: 20px">
+    <div id="aMengeInputDiv" style="border:#777777 solid 1px; display: flex; flex-grow: 0.5"> </div>
+    <div id="resultDiv" style="border:#777777 solid 1px;display: flex; flex-grow: 0.5"> </div>
+</div>
 </body>
 <script>
 	let html = "<table>";
@@ -29,7 +43,7 @@
 		html += "<td style='padding-left:20px; padding-right:20px; padding-bottom:20px'>" 
 				+ "<input type='number' id='noOfpieses" + aMengePos.id + "' name='noOfpieses" + aMengePos.id + "' value='0' min='0' max='5000' style='width=80px;' onchange='noOfPiececChanged()'>" 
 			 + "</td>"
-		html += "<td style='padding-bottom:20px'>" + aMengePos.aMenge + "</td>"
+		html += "<td style='padding-bottom:20px;padding-left:20px'>" + aMengePos.aMenge + "</td>"
 		html += "</tr>";
 	}
 	html += "</table>";
@@ -51,7 +65,7 @@
 			let countPerSchachtel = aMengePos.aMenge;
 			let paletten = menge / countPerSchachtel;
 			html += "<tr>";
-			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder'>" + aMengePos.name + "</td>"
+			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder; text-align:center'>" + aMengePos.name + "</td>"
 			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px'>" + menge + "</td>"
 			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px'>" + countPerSchachtel + "</td>"
 			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder'>" + (Math.round((paletten + Number.EPSILON) * 100) / 100) + "</td>"
