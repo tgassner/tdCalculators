@@ -28,7 +28,9 @@
 </div>
 <div style="display: flex; justify-content: center; margin-top: 20px">
     <div id="aMengeInputDiv" style="border:#777777 solid 1px; display: flex; flex-grow: 0.5"> </div>
-    <div id="resultDiv" style="border:#777777 solid 1px;display: flex; flex-grow: 0.5"> </div>
+</div>
+<div style="display: flex; justify-content: center; margin-top: 20px">
+    <div id="totalResult" style="border:#777777 solid 1px; display: flex; flex-grow: 0.5"> </div>
 </div>
 </body>
 <script>
@@ -36,6 +38,7 @@
 	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>Tassen</th>"
 	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen in Bestellung</th>"
 	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen pro Schachtel</th>"
+    html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>#Paletten</th>"
 	html += "</tr>";
 	for (const aMengePos of aMengeData) {
 		html += "<tr>";
@@ -44,6 +47,7 @@
 				+ "<input type='number' id='noOfpieses" + aMengePos.id + "' name='noOfpieses" + aMengePos.id + "' value='0' min='0' max='5000' style='width=80px;' onchange='noOfPiececChanged()'>" 
 			 + "</td>"
 		html += "<td style='padding-bottom:20px;padding-left:20px'>" + aMengePos.aMenge + "</td>"
+        html += "<td id='partResult" + aMengePos.id + "' style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder'>0</td>"
 		html += "</tr>";
 	}
 	html += "</table>";
@@ -53,26 +57,16 @@
 
 	function noOfPiececChanged() {
 		let sumSchachteln = 0;
-		let html = "<table>";
-		html += "<tr>";
-			html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>Tassen</th>"
-			html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen in Bestellung</th>"
-			html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen pro Schachtel</th>"
-			html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>#Paletten</th>"
-			html += "</tr>";
 		for (const aMengePos of aMengeData) {
 			let menge = document.getElementById("noOfpieses" + aMengePos.id).value;
 			let countPerSchachtel = aMengePos.aMenge;
 			let paletten = menge / countPerSchachtel;
-			html += "<tr>";
-			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder; text-align:center'>" + aMengePos.name + "</td>"
-			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px'>" + menge + "</td>"
-			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px'>" + countPerSchachtel + "</td>"
-			html += "<td style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder'>" + (Math.round((paletten + Number.EPSILON) * 100) / 100) + "</td>"
-			html += "</tr>";
+            let schachteln = (Math.round((paletten + Number.EPSILON) * 100) / 100);
+            sumSchachteln += schachteln;
+		    document.getElementById("partResult" + aMengePos.id).innerHTML = schachteln;
 		}
-		html += "</table>";
-		document.getElementById("resultDiv").innerHTML = html;
+        sumSchachteln = (Math.round((sumSchachteln + Number.EPSILON) * 100) / 100)
+        document.getElementById("totalResult").innerHTML = sumSchachteln;
 	}
 </script>
 </html>
