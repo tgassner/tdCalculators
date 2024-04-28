@@ -27,10 +27,10 @@
     </div>
 </div>
 <div style="display: flex; justify-content: center; margin-top: 20px">
-    <div id="aMengeInputDiv" style="border:#777777 solid 1px; display: flex; flex-grow: 0.5"> </div>
+    <div id="aMengeInputDiv" style="border:#777777 solid 1px; display: flex; padding:20px"> </div>
 </div>
 <div style="display: flex; justify-content: center; margin-top: 20px">
-    <div id="totalResult" style="border:#777777 solid 1px; display: flex; flex-grow: 0.5"> </div>
+    <div id="totalResult" style="border:#777777 solid 0px; display: flex; justify-content: center;font-weight: bolder; font-size: 200%"> </div>
 </div>
 </body>
 <script>
@@ -38,7 +38,7 @@
 	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>Tassen</th>"
 	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen in Bestellung</th>"
 	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen pro Schachtel</th>"
-    html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>#Paletten</th>"
+    html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>#Schachteln</th>"
 	html += "</tr>";
 	for (const aMengePos of aMengeData) {
 		html += "<tr>";
@@ -66,7 +66,7 @@
 		    document.getElementById("partResult" + aMengePos.id).innerHTML = schachteln;
 		}
         sumSchachteln = (Math.round((sumSchachteln + Number.EPSILON) * 100) / 100)
-        document.getElementById("totalResult").innerHTML = sumSchachteln;
+        document.getElementById("totalResult").innerHTML = sumSchachteln + " Schachteln";
 	}
 </script>
 </html>
