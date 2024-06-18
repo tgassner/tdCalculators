@@ -8,11 +8,11 @@
 
 <script>
    const aMengeData = [
-		{ id: 1, name :  "X10", aMenge : 152 } ,
-        { id: 1, name :  "X13", aMenge : 152 } ,
-		{ id: 2, name :  "X16", aMenge : 128 } ,
-		{ id: 3, name :  "X30", aMenge : 172 } ,
-        { id: 3, name :  "X31", aMenge : 152 } ,
+		{ id: 1, name :  "X10", aMengeMin : 144, aMengeMax : 152 } ,
+        { id: 2, name :  "X13", aMengeMin : 144, aMengeMax : 152 } ,
+		{ id: 3, name :  "X16", aMengeMin : 128, aMengeMax : 128 } ,
+		{ id: 4, name :  "X30", aMengeMin : 172, aMengeMax : 172 } ,
+        { id: 5, name :  "X31", aMengeMin : 152, aMengeMax : 152 } ,
 	];
 </script>
 
@@ -24,9 +24,12 @@
     </div>
 
     <div style="flex-grow: 1; background: linear-gradient(90deg, #ffdc14 0%, #0062ad 100%);display: flex; color: #fff; justify-content: center; align-items: center">
-        <h1 style="font-family: khand, Helvetica, Arial, sans-serif">Floorbridge Schachtel Calculator</h1>
+        <div>
+            <h1 style="font-family: khand, Helvetica, Arial, sans-serif">Floorbridge Schachtel Calculator</h1>
+        </div><div style="top:80px; right:200px; position:absolute">
+            1.0 by Gassi 2024
+        </div>
     </div>
-
     <div style="width:100px; background: #0062ad; display: flex;padding: 10px">
         <img src="img/FloorBridge_Logo_05.svg" style="height:100px" alt="Floorbridge Logo Header">
     </div>
@@ -51,7 +54,7 @@
 		html += "<td style='padding-left:20px; padding-right:20px; padding-bottom:20px'>" 
 				+ "<input type='number' id='noOfpieses" + aMengePos.id + "' name='noOfpieses" + aMengePos.id + "' value='0' min='0' max='5000' style='width=80px;' onchange='noOfPiececChanged()'>" 
 			 + "</td>"
-		html += "<td style='padding-bottom:20px;padding-left:20px'>" + aMengePos.aMenge + "</td>"
+		html += "<td style='padding-bottom:20px;padding-left:20px'>" + ((aMengePos.aMengeMin == aMengePos.aMengeMax) ? aMengePos.aMengeMin : (aMengePos.aMengeMin + " - " + aMengePos.aMengeMax)) + "</td>"
         html += "<td id='partResult" + aMengePos.id + "' style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder'>0</td>"
 		html += "</tr>";
 	}
@@ -61,17 +64,23 @@
 	noOfPiececChanged();
 
 	function noOfPiececChanged() {
-		let sumSchachteln = 0;
+		let sumSchachtelnMin = 0;
+        let sumSchachtelnMax = 0;
 		for (const aMengePos of aMengeData) {
 			let menge = document.getElementById("noOfpieses" + aMengePos.id).value;
-			let countPerSchachtel = aMengePos.aMenge;
-			let paletten = menge / countPerSchachtel;
-            let schachteln = (Math.round((paletten + Number.EPSILON) * 100) / 100);
-            sumSchachteln += schachteln;
-		    document.getElementById("partResult" + aMengePos.id).innerHTML = schachteln;
+			let countPerSchachtelMin = aMengePos.aMengeMin;
+            let countPerSchachtelMax = aMengePos.aMengeMax;
+			let palettenMin = menge / countPerSchachtelMin;
+            let palettenMax = menge / countPerSchachtelMax;
+            let schachtelnMin = (Math.round((palettenMin + Number.EPSILON) * 100) / 100);
+            let schachtelnMax = (Math.round((palettenMax + Number.EPSILON) * 100) / 100);
+            sumSchachtelnMin += schachtelnMin;
+            sumSchachtelnMax += schachtelnMax;
+		    document.getElementById("partResult" + aMengePos.id).innerHTML = schachtelnMax  + " - " + schachtelnMin;
 		}
-        sumSchachteln = (Math.round((sumSchachteln + Number.EPSILON) * 100) / 100)
-        document.getElementById("totalResult").innerHTML = sumSchachteln + " Schachteln";
+        sumSchachtelnMin = (Math.round((sumSchachtelnMin + Number.EPSILON) * 100) / 100)
+        sumSchachtelnMax = (Math.round((sumSchachtelnMax + Number.EPSILON) * 100) / 100)
+        document.getElementById("totalResult").innerHTML = sumSchachtelnMax + " - " + sumSchachtelnMin + " Schachteln";
 	}
 </script>
 </html>
