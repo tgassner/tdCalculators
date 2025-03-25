@@ -7,23 +7,27 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
+    <script src="lib/pdf-lib.js"></script>
+    <script src="lib/download.js"></script>
+    <script src="lib/sizes.js"></script>
 <script>
    const aMengeData = [
-		{ id:  1, name :  "X10", aMengeMin : 144, aMengeMax : 144 } ,
-        { id:  2, name :  "X11", aMengeMin : 144, aMengeMax : 144 } ,
-        { id:  3, name :  "X12", aMengeMin : 144, aMengeMax : 144 } ,
-        { id:  4, name :  "X13", aMengeMin : 144, aMengeMax : 144 } ,
-        { id:  5, name :  "X14", aMengeMin : 100, aMengeMax : 100 } ,
-		{ id:  6, name :  "X16", aMengeMin : 128, aMengeMax : 128 } ,
-        { id:  7, name :  "X19", aMengeMin : 144, aMengeMax : 144 } ,
-        { id:  8, name :  "X21", aMengeMin : 192, aMengeMax : 192 } ,
-        { id:  9, name :  "X23", aMengeMin : 128, aMengeMax : 128 } ,
-		{ id: 10, name :  "X30", aMengeMin : 168, aMengeMax : 168 } ,
-        { id: 11, name :  "X31", aMengeMin : 144, aMengeMax : 144 } ,
-        { id: 12, name :  "X32", aMengeMin : 144, aMengeMax : 144 } ,
-        { id: 13, name :  "X33", aMengeMin : 192, aMengeMax : 192 } ,
-        { id: 14, name :  "Frankreich", aMengeMin : 130, aMengeMax : 130 } ,
+		{ id:  1, name :  "X10",        artikelnummer : "FB20 WGX",          aMengeMin : 144, aMengeMax : 144 } ,
+        { id:  2, name :  "X11",        artikelnummer : "PARKHAUS",          aMengeMin : 144, aMengeMax : 144 } ,
+        { id:  3, name :  "X12",        artikelnummer : "FB 20 MIT SCHRIFT", aMengeMin : 144, aMengeMax : 144 } ,
+        { id:  4, name :  "X13",        artikelnummer : "FLOORBRIDGE FB20 ", aMengeMin : 144, aMengeMax : 144 } ,
+        { id:  5, name :  "X14",        artikelnummer : "FB30",              aMengeMin : 100, aMengeMax : 100 } ,
+		{ id:  6, name :  "X16",        artikelnummer : "AVS DOPPELT",       aMengeMin : 128, aMengeMax : 128 } ,
+        { id:  7, name :  "X19",        artikelnummer : "JOINT",             aMengeMin : 144, aMengeMax : 144 } ,
+        { id:  8, name :  "X21",        artikelnummer : "FB15OHNE",          aMengeMin : 192, aMengeMax : 192 } ,
+        { id:  9, name :  "X23",        artikelnummer : "CPS NEU",           aMengeMin : 128, aMengeMax : 128 } ,
+		{ id: 10, name :  "X30",        artikelnummer : "CPS-TD",            aMengeMin : 168, aMengeMax : 168 } ,
+        { id: 11, name :  "X31",        artikelnummer : "MC FLOOR",          aMengeMin : 144, aMengeMax : 144 } ,
+        { id: 12, name :  "X32",        artikelnummer : "SL 20/08",          aMengeMin : 144, aMengeMax : 144 } ,
+        { id: 13, name :  "X33",        artikelnummer : "WGX 15/10",         aMengeMin : 192, aMengeMax : 192 } ,
+        { id: 14, name :  "Frankreich", artikelnummer : "FB20 WGX",          aMengeMin : 130, aMengeMax : 130 } ,
 	];
+   var aLabelData = [];
 </script>
 
 </head>
@@ -50,6 +54,7 @@
 <div style="display: flex; justify-content: center; margin-top: 20px">
     <div id="totalResult" style="border:#777777 solid 0px; display: flex; justify-content: center;font-weight: bolder; font-size: 200%"> </div>
 </div>
+<button onclick="createPdf()">Trallala</button>
 </body>
 <script>
 	let html = "<table>";
@@ -76,12 +81,17 @@
 	function noOfPiececChanged() {
 		let sumSchachtelnMin = 0;
         let sumSchachtelnMax = 0;
+        aLabelData = [];
 		for (const aMengePos of aMengeData) {
 			let menge = document.getElementById("noOfpieses" + aMengePos.id).value;
 			let palettenMin = menge / aMengePos.aMengeMax;
             let palettenMax = menge / aMengePos.aMengeMin;
             let schachtelnMin = (Math.round((palettenMin + Number.EPSILON) * 100) / 100);
             let schachtelnMax = (Math.round((palettenMax + Number.EPSILON) * 100) / 100);
+            if (menge > 0) {
+                let mengePos = { name : aMengePos.name, artikelnummer : aMengePos.artikelnummer, schachteln :  Math.ceil(schachtelnMin), content : aMengePos.aMengeMin}
+                aLabelData.push(mengePos);
+            }
             sumSchachtelnMin += schachtelnMin;
             sumSchachtelnMax += schachtelnMax;
 		    document.getElementById("partResult" + aMengePos.id).innerHTML = ((schachtelnMin === schachtelnMax) ? schachtelnMin : (schachtelnMin  + " - " + schachtelnMax));
@@ -90,5 +100,82 @@
         sumSchachtelnMax = (Math.round((sumSchachtelnMax + Number.EPSILON) * 100) / 100)
         document.getElementById("totalResult").innerHTML = ((sumSchachtelnMin === sumSchachtelnMax) ? sumSchachtelnMin : (sumSchachtelnMin + " - " + sumSchachtelnMax)) + " Schachteln";
 	}
+
+        const {PDFDocument, StandardFonts, rgb} = PDFLib
+
+    function getCenterPos(page, helvetiaFont, text, fontSize) {
+        return (page.getWidth() - helvetiaFont.widthOfTextAtSize(text, fontSize)) / 2;
+    }
+
+    async function createPdf() {
+            const pdfDoc = await PDFDocument.create()
+            const helvetiaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+            const HelveticaBoldFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+            const jpgTransparentdesignUrl = 'img/transparentdesign.jpg';
+            const jpgTransparentdesignImageBytes = await fetch(jpgTransparentdesignUrl).then((res) => res.arrayBuffer())
+            const jpgTransparentdesignImage = await pdfDoc.embedJpg(jpgTransparentdesignImageBytes)
+            const jpgTransparentdesignDims = jpgTransparentdesignImage.scale(0.1)
+
+            const jpgheaderTokenUrl = 'img/headerToken.jpg';
+            const jpgheaderTokenImageBytes = await fetch(jpgheaderTokenUrl).then((res) => res.arrayBuffer())
+            const jpgheaderTokenImage = await pdfDoc.embedJpg(jpgheaderTokenImageBytes)
+            const jpgheaderTokenDims = jpgheaderTokenImage.scale(0.2)
+
+            const fontSizeName = 150
+            const fontSizeAmount = 100
+            const fontSizeArtikelnummer = 50
+
+            for (const labelPos of aLabelData) {
+                for (let i = 0; i < labelPos.schachteln; i++) {
+                    const page = pdfDoc.addPage([PageSizes.A4[1], PageSizes.A4[0]]);
+                    page.drawText(labelPos.name, {
+                        x: getCenterPos(page, HelveticaBoldFont, labelPos.name, fontSizeName),
+                        y: 350,
+                        size: fontSizeName,
+                        font: HelveticaBoldFont,
+                        color: rgb(0, 0, 0),
+                    });
+
+                    console.log(labelPos);
+                    page.drawText(labelPos.content + " St" + String.fromCharCode(252) + "ck", {
+                        x: getCenterPos(page, HelveticaBoldFont, labelPos.content + " St" + String.fromCharCode(252) + "ck", fontSizeAmount),
+                        y: 200,
+                        size: fontSizeAmount,
+                        font: HelveticaBoldFont,
+                        color: rgb(0, 0, 0),
+                    });
+
+
+                    page.drawText(labelPos.artikelnummer, {
+                        x: getCenterPos(page, helvetiaFont, labelPos.artikelnummer, fontSizeArtikelnummer),
+                        y: 100,
+                        size: fontSizeArtikelnummer,
+                        font: helvetiaFont,
+                        color: rgb(0, 0, 0),
+                    });
+
+                    page.drawImage(jpgTransparentdesignImage, {
+                        x: page.getWidth() - jpgTransparentdesignDims.width - 50,
+                        y: 50,
+                        width: jpgTransparentdesignDims.width,
+                        height: jpgTransparentdesignDims.height,
+                        opacity: 1,
+                    })
+
+                    page.drawImage(jpgheaderTokenImage, {
+                        x: page.getWidth() - jpgheaderTokenDims.width - 50,
+                        y: page.getHeight() - jpgheaderTokenDims.height - 30,
+                        width: jpgheaderTokenDims.width,
+                        height: jpgheaderTokenDims.height,
+                        opacity: 1,
+                    })
+                }
+            }
+
+            const pdfBytes = await pdfDoc.save()
+
+            download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");
+        }
 </script>
 </html>
