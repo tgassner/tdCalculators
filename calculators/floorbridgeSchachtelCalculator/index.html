@@ -37,7 +37,7 @@
         <div>
             <h1 style="font-family: khand, Helvetica, Arial, sans-serif">Floorbridge Schachtel Calculator</h1>
         </div><div style="top:80px; right:200px; position:absolute">
-            1.1 by Gassi 2025
+            1.11 by Gassi 25.03.2025
         </div>
     </div>
     <div style="width:100px; background: #0062ad; display: flex;padding: 10px">
@@ -64,7 +64,7 @@
 		html += "<td style='padding-left:20px; padding-right:20px; padding-bottom:20px'>" 
 				+ "<input type='number' id='noOfpieses" + aMengePos.id + "' name='noOfpieses" + aMengePos.id + "' value='0' min='0' max='5000' style='width=80px;' onchange='noOfPiececChanged()'>" 
 			 + "</td>"
-		html += "<td style='padding-bottom:20px;padding-left:20px'>" + ((aMengePos.aMengeMin == aMengePos.aMengeMax) ? aMengePos.aMengeMin : (aMengePos.aMengeMin + " - " + aMengePos.aMengeMax)) + "</td>"
+		html += "<td style='padding-bottom:20px;padding-left:20px'>" + ((aMengePos.aMengeMin === aMengePos.aMengeMax) ? aMengePos.aMengeMin : (aMengePos.aMengeMin + " - " + aMengePos.aMengeMax)) + "</td>"
         html += "<td id='partResult" + aMengePos.id + "' style='padding-bottom:20px; padding-left:20px; padding-right:20px; font-weight:bolder'>0</td>"
 		html += "</tr>";
 	}
@@ -78,19 +78,17 @@
         let sumSchachtelnMax = 0;
 		for (const aMengePos of aMengeData) {
 			let menge = document.getElementById("noOfpieses" + aMengePos.id).value;
-			let countPerSchachtelMin = aMengePos.aMengeMin;
-            let countPerSchachtelMax = aMengePos.aMengeMax;
-			let palettenMin = menge / countPerSchachtelMin;
-            let palettenMax = menge / countPerSchachtelMax;
+			let palettenMin = menge / aMengePos.aMengeMax;
+            let palettenMax = menge / aMengePos.aMengeMin;
             let schachtelnMin = (Math.round((palettenMin + Number.EPSILON) * 100) / 100);
             let schachtelnMax = (Math.round((palettenMax + Number.EPSILON) * 100) / 100);
             sumSchachtelnMin += schachtelnMin;
             sumSchachtelnMax += schachtelnMax;
-		    document.getElementById("partResult" + aMengePos.id).innerHTML = schachtelnMax  + " - " + schachtelnMin;
+		    document.getElementById("partResult" + aMengePos.id).innerHTML = ((schachtelnMin === schachtelnMax) ? schachtelnMin : (schachtelnMin  + " - " + schachtelnMax));
 		}
         sumSchachtelnMin = (Math.round((sumSchachtelnMin + Number.EPSILON) * 100) / 100)
         sumSchachtelnMax = (Math.round((sumSchachtelnMax + Number.EPSILON) * 100) / 100)
-        document.getElementById("totalResult").innerHTML = sumSchachtelnMax + " - " + sumSchachtelnMin + " Schachteln";
+        document.getElementById("totalResult").innerHTML = ((sumSchachtelnMin === sumSchachtelnMax) ? sumSchachtelnMin : (sumSchachtelnMin + " - " + sumSchachtelnMax)) + " Schachteln";
 	}
 </script>
 </html>
