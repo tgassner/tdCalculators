@@ -41,20 +41,26 @@
         <div>
             <h1 style="font-family: khand, Helvetica, Arial, sans-serif">Floorbridge Schachtel Calculator</h1>
         </div><div style="top:80px; right:200px; position:absolute">
-            1.11 by Gassi 25.03.2025
+            1.2 by Gassi 26.03.2025
         </div>
     </div>
     <div style="width:100px; background: #0062ad; display: flex;padding: 10px">
         <img src="img/FloorBridge_Logo_05.svg" style="height:100px" alt="Floorbridge Logo Header">
     </div>
 </div>
-<div style="display: flex; justify-content: center; margin-top: 20px">
+<div style="display: flex; justify-content: center; margin-top: 20px; flex-direction: row">
     <div id="aMengeInputDiv" style="border:#777777 solid 1px; display: flex; padding:20px"> </div>
+    <div id="resultDiv" style="border:#777777 solid 0px; display: flex; padding:20px; flex-direction: column">
+        <div id="" style="margin-top: 20px ;display: flex; justify-content: center;font-weight: bolder; font-size: 200%">
+            Ergebnis
+        </div>
+        <div id="totalResult" style="text-align:center ;margin-top: 50px; display: flex; justify-content: center;font-weight: bolder; font-size: 160%; width: 244px"> </div>
+        <div id="downLoadButtonDiv" style="background-color: #eeeeee; display: flex; margin-top: 50px; flex-direction: column; border:#777777 solid 3px; padding: 8px; border-radius: 10px; box-shadow: 10px 20px 15px silver; cursor: pointer; align-items: center" onclick="createPdf()">
+            <img src="img/file_download_pdf_icon.webp" style="width: 150px; display: flex">
+            <div style="display: flex; text-align: center; font-weight: bold; font-size: 120%">Generate and Download<br>Label PDF-File</div>
+        </div>
+    </div>
 </div>
-<div style="display: flex; justify-content: center; margin-top: 20px">
-    <div id="totalResult" style="border:#777777 solid 0px; display: flex; justify-content: center;font-weight: bolder; font-size: 200%"> </div>
-</div>
-<button onclick="createPdf()">Trallala</button>
 </body>
 <script>
 	let html = "<table>";
@@ -98,7 +104,8 @@
 		}
         sumSchachtelnMin = (Math.round((sumSchachtelnMin + Number.EPSILON) * 100) / 100)
         sumSchachtelnMax = (Math.round((sumSchachtelnMax + Number.EPSILON) * 100) / 100)
-        document.getElementById("totalResult").innerHTML = ((sumSchachtelnMin === sumSchachtelnMax) ? sumSchachtelnMin : (sumSchachtelnMin + " - " + sumSchachtelnMax)) + " Schachteln";
+        document.getElementById("totalResult").innerHTML = ((sumSchachtelnMin === sumSchachtelnMax) ? sumSchachtelnMin : (sumSchachtelnMin + " - " + sumSchachtelnMax)) + "<br>Schachteln";
+        document.getElementById("downLoadButtonDiv").style.display = sumSchachtelnMax <= 0 ? "none" : "flex";
 	}
 
         const {PDFDocument, StandardFonts, rgb} = PDFLib
@@ -174,8 +181,23 @@
             }
 
             const pdfBytes = await pdfDoc.save()
-
-            download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");
+            download(pdfBytes, getDatumString() + "_Floorbridge_Labels.pdf", "application/pdf");
         }
+
+    function getDatumString() {
+        let date = new Date(),
+            month = '' + (date.getMonth() + 1),
+            day = '' + date.getDate(),
+            year = date.getFullYear();
+
+        if (month.length < 2) {
+            month = '0' + month;
+        }
+        if (day.length < 2) {
+            day = '0' + day;
+        }
+
+        return [year, month, day].join('-');
+    }
 </script>
 </html>
