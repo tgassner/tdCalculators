@@ -41,7 +41,7 @@
         <div>
             <h1 style="font-family: khand, Helvetica, Arial, sans-serif">Floorbridge Schachtel Calculator</h1>
         </div><div style="top:80px; right:200px; position:absolute">
-            1.2.1 by Gassi 16.04.2025
+            1.2.2 by Gassi 16.04.2025
         </div>
     </div>
     <div style="width:100px; background: #0062ad; display: flex;padding: 10px">
@@ -70,7 +70,7 @@
     html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>#Schachteln</th>"
 	html += "</tr>";
 	for (const aMengePos of aMengeData) {
-		html += "<tr>";
+		html += "<tr title='" + aMengePos.name + "&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;" + aMengePos.artikelnummer + "' >";
 		html += "<td style='padding-bottom:20px; text-align:center'>" + "<label for='noOfpieses" + aMengePos.id + "'>" + aMengePos.name + "</label>" + "</td>"
 		html += "<td style='padding-left:20px; padding-right:20px; padding-bottom:20px'>" 
 				+ "<input type='number' id='noOfpieses" + aMengePos.id + "' name='noOfpieses" + aMengePos.id + "' value='0' min='0' max='5000' style='width=80px;' onchange='noOfPiececChanged()'>" 
