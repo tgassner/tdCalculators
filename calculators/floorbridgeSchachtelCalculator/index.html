@@ -1,12 +1,11 @@
-<html>
+<html lang="de">
 <head>
     <link rel="icon" href="img/fb_favicon_blau-150x150.png" sizes="32x32" />
     <link rel="icon" href="img/fb_favicon_blau.png" sizes="192x192" />
     <link rel="apple-touch-icon" href="img/fb_favicon_blau.png" />
-    <meta name="msapplication-TileImage" content="img/fb_favicon_blau.png" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
+    <meta name="application-TileImage" content="img/fb_favicon_blau.png" />
+    <meta http-equiv="content-type" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="refresh" content="no-cache" />
     <script src="lib/pdf-lib.js"></script>
     <script src="lib/download.js"></script>
     <script src="lib/sizes.js"></script>
@@ -29,6 +28,7 @@
 	];
    var aLabelData = [];
 </script>
+    <title>Floorbridge Schachtel Calculator</title>
 
 </head>
 <body style="margin:0; font-family: helvetica neue, Helvetica, Arial, sans-serif">
@@ -41,7 +41,7 @@
         <div>
             <h1 style="font-family: khand, Helvetica, Arial, sans-serif">Floorbridge Schachtel Calculator</h1>
         </div><div style="top:80px; right:200px; position:absolute">
-            1.2.2 by Gassi 16.04.2025
+            1.2.3 by Gassi 16.05.2025
         </div>
     </div>
     <div style="width:100px; background: #0062ad; display: flex;padding: 10px">
@@ -55,14 +55,20 @@
             Ergebnis
         </div>
         <div id="totalResult" style="text-align:center ;margin-top: 50px; display: flex; justify-content: center;font-weight: bolder; font-size: 160%; width: 244px"> </div>
+        <div id="deliveryDateDiv" style="text-align:center ;margin-top: 50px; display: flex; justify-content: center;font-weight: bold; font-size: 100%; width: 244px">
+            <label for="deliveryDate" >Lieferdatum</label>&nbsp&nbsp&nbsp
+            <input type="date" id="deliveryDate" name="deliveryDate">
+        </div>
         <div id="downLoadButtonDiv" style="background-color: #eeeeee; display: flex; margin-top: 50px; flex-direction: column; border:#777777 solid 3px; padding: 8px; border-radius: 10px; box-shadow: 10px 20px 15px silver; cursor: pointer; align-items: center" onclick="createPdf()">
-            <img src="img/file_download_pdf_icon.webp" style="width: 150px; display: flex">
+            <img src="img/file_download_pdf_icon.webp" style="width: 150px; display: flex" alt="PDF-Download Button">
             <div style="display: flex; text-align: center; font-weight: bold; font-size: 120%">Generate and Download<br>Label PDF-File</div>
         </div>
     </div>
 </div>
 </body>
 <script>
+    document.getElementById('deliveryDate').valueAsDate = new Date();
+
 	let html = "<table>";
 	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px;'>Tassen</th>"
 	html += "<th style='padding-bottom:20px; padding-left:20px; padding-right:20px'>#Tassen in Bestellung</th>"
@@ -132,6 +138,13 @@
             const fontSizeName = 150
             const fontSizeAmount = 100
             const fontSizeArtikelnummer = 50
+            const fontSizeDeliveryDate = 25
+
+
+
+            const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            const deliveryDate  = document.getElementById('deliveryDate').valueAsDate;
+            const deliveryDateString = deliveryDate.toLocaleDateString("de-AT", options);
 
             for (const labelPos of aLabelData) {
                 for (let i = 0; i < labelPos.schachteln; i++) {
@@ -144,7 +157,6 @@
                         color: rgb(0, 0, 0),
                     });
 
-                    console.log(labelPos);
                     page.drawText(labelPos.content + " St" + String.fromCharCode(252) + "ck", {
                         x: getCenterPos(page, HelveticaBoldFont, labelPos.content + " St" + String.fromCharCode(252) + "ck", fontSizeAmount),
                         y: 200,
@@ -158,6 +170,14 @@
                         x: getCenterPos(page, helvetiaFont, labelPos.artikelnummer, fontSizeArtikelnummer),
                         y: 100,
                         size: fontSizeArtikelnummer,
+                        font: helvetiaFont,
+                        color: rgb(0, 0, 0),
+                    });
+
+                    page.drawText(deliveryDateString, {
+                        x: 25,
+                        y: 550,
+                        size: fontSizeDeliveryDate,
                         font: helvetiaFont,
                         color: rgb(0, 0, 0),
                     });
