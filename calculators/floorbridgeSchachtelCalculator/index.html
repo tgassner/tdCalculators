@@ -140,8 +140,6 @@
             const fontSizeArtikelnummer = 50
             const fontSizeDeliveryDate = 25
 
-
-
             const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
             const deliveryDate  = document.getElementById('deliveryDate').valueAsDate;
             const deliveryDateString = deliveryDate.toLocaleDateString("de-AT", options);
@@ -175,8 +173,8 @@
                     });
 
                     page.drawText(deliveryDateString, {
-                        x: 25,
-                        y: 550,
+                        x: 45,
+                        y: 530,
                         size: fontSizeDeliveryDate,
                         font: helvetiaFont,
                         color: rgb(0, 0, 0),
